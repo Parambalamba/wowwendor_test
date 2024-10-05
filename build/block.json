@@ -15,5 +15,19 @@
   "editorScript": "file:./index.js",
   "editorStyle": "file:./index.css",
   "style": "file:./style-index.css",
-  "viewScript": "file:./view.js"
+  "render": "file:./render.php",
+  "viewScript": "file:./view.js",
+  "attributes": {
+    "pokemon_types": {
+      "type": "string",
+      "default": "https://pokeapi.co/api/v2/type/1/"
+    },
+    "type_name": {
+      "type": "string",
+      "default": "normal"
+    },
+    "pokes_html": {
+      "type": "html"
+    }
+  }
 }

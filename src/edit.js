@@ -3,7 +3,6 @@
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-i18n/
  */
-import { __ } from '@wordpress/i18n';
 
 /**
  * React hook that is used to mark the block wrapper element.
@@ -11,7 +10,6 @@ import { __ } from '@wordpress/i18n';
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-block-editor/#useblockprops
  */
-import { useBlockProps } from '@wordpress/block-editor';
 
 /**
  * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
@@ -21,6 +19,10 @@ import { useBlockProps } from '@wordpress/block-editor';
  */
 import './editor.scss';
 
+import { useState, useEffect } from '@wordpress/element';
+import apiFetch from '@wordpress/api-fetch';
+import { SelectControl } from '@wordpress/components';
+
 /**
  * The edit function describes the structure of your block in the context of the
  * editor. This represents what the editor will render when the block is used.
@@ -29,10 +31,80 @@ import './editor.scss';
  *
  * @return {Element} Element to render.
  */
-export default function Edit() {
+
+export default function Edit( props ) {
+	const { attributes, setAttributes } = props;
+	const [ error, setError ] = useState( [] );
+	const [ types, setTypes ] = useState( [] );
+
+	useEffect( () => {
+		( async () => {
+			await apiFetch( {
+				path: '/wow/v1/type',
+			} ).then(
+				( response ) => {
+					setTypes( response.results );
+				},
+				( error ) => {
+					setError( error );
+				}
+			);
+		} )();
+	}, [] );
+
+	useEffect( () => {
+		( async () => {
+			await apiFetch( {
+				path: '/wow/v1/poke_info',
+				method: 'POST',
+				data: { url: attributes.pokemon_types },
+			} ).then(
+				( response ) => {
+					setAttributes( { pokes_html: response } );
+				},
+				( error ) => {
+					setError( error );
+				}
+			);
+		} )();
+	}, [] );
+
+	const options = [];
+	if ( types ) {
+		types.forEach( ( type ) => {
+			options.push( { value: type.url, label: type.name } );
+		} );
+	} else {
+		options.push( { value: 0, label: 'Loading...' } );
+	}
+
+	function setPokemonType( pokemonType ) {
+		setAttributes( { pokemon_types: pokemonType } );
+		options.forEach( function ( entry ) {
+			if ( entry.value === attributes.pokemon_types ) {
+				setAttributes( { type_name: entry.label } );
+			}
+		} );
+		const dat = apiFetch( {
+			path: '/wow/v1/poke_info',
+			method: 'POST',
+			data: { url: attributes.pokemon_types },
+		} ).then(
+			( response ) => {
+				setAttributes( { pokes_html: response } );
+			},
+			( error ) => {
+				setError( error );
+			}
+		);
+	}
+
 	return (
-		<p { ...useBlockProps() }>
-			{ __( 'Wow Test Poke Block – hello from the editor!', 'wow-test' ) }
-		</p>
+		<SelectControl
+			label="Select a pokemon type"
+			options={ options }
+			value={ attributes.pokemon_types }
+			onChange={ ( newType ) => setPokemonType( newType ) }
+		/>
 	);
 }
