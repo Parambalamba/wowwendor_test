@@ -10,3 +10,21 @@
 	color: #fff;
 	padding: 2px;
 }
+
+h1 {
+	text-align: center;
+}
+
+.pokes-wrapper {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+	justify-content: space-between;
+
+	.poke {
+		width: 23%;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+}
