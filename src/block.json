@@ -6,7 +6,7 @@
 	"title": "Wow Test Poke Block",
 	"category": "design",
 	"icon": "superhero-alt",
-	"description": "Example block scaffolded with Create Block tool.",
+	"description": "Wow Test Block for work with POKE API",
 	"example": {},
 	"supports": {
 		"html": false

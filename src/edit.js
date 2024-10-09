@@ -79,15 +79,13 @@ export default function Edit( props ) {
 	}
 
 	function setPokemonType( pokemonType ) {
-		console.log("log1 = ");
-		console.log(pokemonType);
 		setAttributes( { pokemon_types: pokemonType } );
 		options.forEach( function ( entry ) {
 			if ( entry.value === pokemonType ) {
 				setAttributes( { type_name: entry.label } );
 			}
 		} );
-		console.log(attributes.type_name);
+
 		const dat = apiFetch( {
 			path: '/wow/v1/poke_info',
 			method: 'POST',
