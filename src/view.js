@@ -21,5 +21,5 @@
  */
 
 /* eslint-disable no-console */
-console.log( 'Hello World! (from wow-wow-test block)' );
+
 /* eslint-enable no-console */
